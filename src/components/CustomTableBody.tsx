@@ -1,16 +1,15 @@
 import TableBody from "@mui/material/TableBody";
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { Prize } from "../pages/MainPage";
 import { SortContext } from "../contexts/SortContextProvider";
 import { useParams } from "react-router-dom";
-import { DataContext } from "../contexts/DataContextProvider";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import { FilterDataContext } from "../contexts/FilterDataContextProvider";
 
 export default function CustomTableBody() {
   const { sortParam, sortDirection } = useContext(SortContext);
-  const { paramLang, paramYear } = useParams();
+  const { paramLang } = useParams();
   const { filteredData } = useContext(FilterDataContext);
 
   const langCategory = (category: Object) => {
@@ -35,16 +34,15 @@ export default function CustomTableBody() {
     }
   };
 
-  console.log(filteredData)
-
   return (
     <>
       <TableBody>
         {filteredData
           .sort(sortFunction)
-          .map((row) => (
+          .map((row, index) => (
             <TableRow
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              key = {index}
             >
               <TableCell component="th" scope="row">
                 {row.awardYear}

@@ -1,8 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-} from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { Prize } from "../pages/MainPage";
 import { DataContext } from "./DataContextProvider";
 
@@ -23,7 +19,7 @@ export const FilterDataContext = createContext({
   ],
   filterDate: ["string", "string"],
   setFilterDate: (value: React.SetStateAction<string[]>) => console.log(value),
-  filterAmount: 100000,
+  filterAmount: 0,
   setFilterAmount: (value: React.SetStateAction<number>) => console.log(value),
   filterCategories: ["category"],
   setFilterCategories: (value: React.SetStateAction<string[]>) =>
@@ -31,6 +27,7 @@ export const FilterDataContext = createContext({
   filterCategoriesChosen: ["category"],
   setFilterCategoriesChosen: (value: React.SetStateAction<string[]>) =>
     console.log(value),
+  filterAmountBias: 0
 });
 
 interface Props {
@@ -51,28 +48,47 @@ export default function FilterDataContextProvider({
   const preFilteredData = data.filter(
     (prize: Prize) => prize.awardYear === paramYear
   );
-
-  const [filterAmount, setFilterAmout] = useState(
-    Math.max(...preFilteredData.map((prize: Prize) => prize.prizeAmount))
+  const filterAm = Math.max(
+    ...preFilteredData.map((prize: Prize) => prize.prizeAmount)
   );
-
+  const [filterAmount, setFilterAmout] = useState(filterAm);
   const [filterCategories, setFilterCategories] = useState(
     preFilteredData.map((prize: Prize) => langCategoryEn(prize.category))
   );
-
   const [filterCategoriesChosen, setFilterCategoriesChosen] = useState(
     preFilteredData.map((prize: Prize) => langCategoryEn(prize.category))
   );
+  const [filterAmountBias, setFilterAmountBias] = useState(
+    Math.round(filterAmount / 100) + 1
+  );
+
+  useEffect(() => {
+    const amountTemp = Math.max(
+      ...preFilteredData.map((prize: Prize) => prize.prizeAmount)
+    );
+    setFilterCategories(
+      preFilteredData.map((prize: Prize) => langCategoryEn(prize.category))
+    );
+    setFilterAmout(
+      amountTemp
+    );
+    setFilterCategoriesChosen(
+      preFilteredData.map((prize: Prize) => langCategoryEn(prize.category))
+    );
+    setFilterAmountBias(Math.round(amountTemp / 100) + 1);
+    console.log("DATA REFRESHED");
+  }, [data]);
 
   const filteredData = preFilteredData
     .filter((prize: Prize) => prize.prizeAmount <= filterAmount)
     .filter((prize: Prize) =>
       filterCategoriesChosen.includes(langCategoryEn(prize.category))
     )
-    .filter((prize: Prize) => 
-      prize.dateAwarded >= filterDate[0] && prize.dateAwarded <= filterDate[1]
+    .filter(
+      (prize: Prize) =>
+        (prize.dateAwarded >= filterDate[0] && prize.dateAwarded <= filterDate[1]) || !prize.dateAwarded
     );
-
+    // JEŻELI CHCEMY MIEĆ ODSIANE TEŻ TECORDY Z NIEZNANYMI DATAMI USUWAMY TĄ KOŃCÓWKĘ "|| !prize.dateAwarded"
   return (
     <FilterDataContext.Provider
       value={{
@@ -85,6 +101,7 @@ export default function FilterDataContextProvider({
         setFilterCategories: setFilterCategories,
         filterCategoriesChosen: filterCategoriesChosen,
         setFilterCategoriesChosen: setFilterCategoriesChosen,
+        filterAmountBias : filterAmountBias
       }}
     >
       {children}

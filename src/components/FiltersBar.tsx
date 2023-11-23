@@ -1,7 +1,7 @@
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Slider from "@mui/material/Slider";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FilterDataContext } from "../contexts/FilterDataContextProvider";
 import DateInputer from "./DateInputer";
 
@@ -16,16 +16,13 @@ export default function FiltersBar({ propYear }: Props) {
     setFilterAmount,
     filterCategoriesChosen,
     setFilterCategoriesChosen,
-    filterDate,
+    filterAmountBias
   } = useContext(FilterDataContext);
 
-  const [filterAmountBias, setFilterAmountBias] = useState(
-    Math.round(filterAmount / 100) + 1
-  );
+  
 
   const handleAmountChange = (event: Event, newValue: number | number[]) => {
     setFilterAmount(Math.round((newValue as number) * filterAmountBias));
-    console.log("filterAmount: ", filterAmount);
   };
 
   function amountText(value: number) {
@@ -38,7 +35,6 @@ export default function FiltersBar({ propYear }: Props) {
       : setFilterCategoriesChosen(
           filterCategoriesChosen.filter((categ) => categ != category)
         );
-    console.log("dopping category...", filterCategoriesChosen);
   }
 
   const prizeMarks = [

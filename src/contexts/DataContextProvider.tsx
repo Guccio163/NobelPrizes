@@ -23,21 +23,22 @@ export const DataContext = createContext({
 
 // export const DataContext2 = createContext();
 
+function uniqueFilter(value: number, index: number, self: number[]) {
+  return self.indexOf(value) === index;
+}
+
 export default function DataContextProvider({ children }: PropsWithChildren) {
   const [lang, setLang] = useState<Object>({});
   const [yearList, setYearList] = useState<number[]>([]);
   const [data, setData] = useState<Prize[]>([]);
 
-  function uniqueFilter(value: number, index: number, self: number[]) {
-    return self.indexOf(value) === index;
-  }
-
-  const getDistinctYears = () => {
-    const yearsDistinct = data.map((prize: Prize) =>
+  const getDistinctYears = (nobelPrizes: Prize[]) => {
+    const yearsDistinct = nobelPrizes.map((prize: Prize) =>
       new Date(prize.dateAwarded).getFullYear()
     );
     const filteredArray = yearsDistinct.filter(uniqueFilter);
-    setYearList(filteredArray);
+    // setYearList(filteredArray);
+    return filteredArray;
   };
 
   const fetchData = async () => {
@@ -45,19 +46,28 @@ export default function DataContextProvider({ children }: PropsWithChildren) {
       let response = await axios.get(
         "https://api.nobelprize.org/2.1/nobelPrizes"
       );
-      setData(response.data.nobelPrizes);
-      console.log("data requested")
+      // setData(response.data.nobelPrizes);
+      console.log("data requested");
+      // console.log({ data });
+      return response.data.nobelPrizes;
     } catch (error) {
       console.error("Błąd podczas pobierania danych", error);
     }
   };
 
-  useEffect(() => {
-    getDistinctYears();
-  }, [data]);
+  // console.log("DUPPPAAAA");
+
+  // useEffect(() => {
+  //   getDistinctYears();
+  // }, [data]);
 
   useEffect(() => {
-    fetchData();
+    (async () => {
+      const nobelPrizes = await fetchData();
+      const distinctYears = getDistinctYears(nobelPrizes);
+      setData(nobelPrizes);
+      setYearList(distinctYears);
+    })();
   }, []);
 
   return (

@@ -1,8 +1,8 @@
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import NativeSelect from "@mui/material/NativeSelect";
-import React, { useContext, useState } from "react";
+
+import { useContext, useState } from "react";
 import { FilterDataContext } from "../contexts/FilterDataContextProvider";
+import MonthInput from "./MonthInput";
+import DayInput from "./DayInput";
 
 interface Props {
   year: string;
@@ -42,7 +42,6 @@ export default function DateInputer({ year }: Props) {
       `${year}-${month1}-${intWithZero}`,
       `${year}-${month2}-${day2}`,
     ]);
-    console.log(filterDate);
   };
 
   const handleMonth1Change = (event: { target: { value: string } }) => {
@@ -86,82 +85,26 @@ export default function DateInputer({ year }: Props) {
   return (
     <>
       <p>Start filter date: {filterDate[0]}</p>
-
       <div style={{ display: "flex", flexDirection: "row" }}>
-        <FormControl fullWidth>
-          <InputLabel variant="standard" htmlFor="uncontrolled-native">
-            Month
-          </InputLabel>
-          <NativeSelect
-            defaultValue={0}
-            inputProps={{
-              name: "day1",
-              id: "uncontrolled-native",
-            }}
-            onChange={handleMonth1Change}
-          >
-            {Array.from({ length: 12 }, (_, index) => index + 1).map((num) => (
-              <option value={num}>{months[num - 1]}</option>
-            ))}
-          </NativeSelect>
-        </FormControl>
-        <FormControl fullWidth>
-          <InputLabel variant="standard" htmlFor="uncontrolled-native">
-            Day
-          </InputLabel>
-          <NativeSelect
-            defaultValue={1}
-            inputProps={{
-              name: "month1",
-              id: "uncontrolled-native",
-            }}
-            onChange={handleDay1Change}
-          >
-            {Array.from({ length: monthLen[parseInt(month1)] }, (_, index) => index + 1).map((num) => (
-              <option value={num}>{num}</option>
-            ))}
-          </NativeSelect>
-        </FormControl>
+        <MonthInput months={months} handleChange={handleMonth1Change} defaultValue={0}/>
+        <DayInput
+          handleChange={handleDay1Change}
+          month={month1}
+          monthLen={monthLen}
+          defaultValue={1}
+          name="day1"
+        />
       </div>
       <p>End filter date: {filterDate[1]}</p>
       <div style={{ display: "flex", flexDirection: "row" }}>
-        <FormControl fullWidth>
-          <InputLabel variant="standard" htmlFor="uncontrolled-native">
-            Month
-          </InputLabel>
-          <NativeSelect
-            defaultValue={12}
-            inputProps={{
-              name: "day2",
-              id: "uncontrolled-native",
-            }}
-            onChange={handleMonth2Change}
-          >
-            {Array.from({ length: 12 }, (_, index) => index + 1).map((num) => (
-              <option value={num}>{months[num - 1]}</option>
-            ))}
-          </NativeSelect>
-        </FormControl>
-        <FormControl fullWidth>
-          <InputLabel variant="standard" htmlFor="uncontrolled-native">
-            Day
-          </InputLabel>
-          <NativeSelect
-            defaultValue={31}
-            inputProps={{
-              name: "month2",
-              id: "uncontrolled-native",
-            }}
-            onChange={handleDay2Change}
-          >
-            {Array.from(
-              { length: monthLen[parseInt(month2) - 1] },
-              (_, index) => index + 1
-            ).map((num) => (
-              <option value={num}>{num}</option>
-            ))}
-          </NativeSelect>
-        </FormControl>
+        <MonthInput months={months} handleChange={handleMonth2Change} defaultValue={12}/>
+        <DayInput
+          handleChange={handleDay2Change}
+          month={month2}
+          monthLen={monthLen}
+          defaultValue={31}
+          name="day2"
+        />
       </div>
     </>
   );
