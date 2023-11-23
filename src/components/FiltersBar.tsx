@@ -1,9 +1,10 @@
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Slider from "@mui/material/Slider";
-import React, { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { FilterDataContext } from "../contexts/FilterDataContextProvider";
 import DateInputer from "./DateInputer";
+import { useParams } from "react-router-dom";
 
 interface Props {
   propYear: string;
@@ -16,10 +17,35 @@ export default function FiltersBar({ propYear }: Props) {
     setFilterAmount,
     filterCategoriesChosen,
     setFilterCategoriesChosen,
-    filterAmountBias
+    filterAmountBias,
   } = useContext(FilterDataContext);
 
-  
+  const { paramLang } = useParams();
+
+  const dictionary =
+    paramLang === "en"
+      ? {
+          startDate: "Go back",
+          endDate: "Year",
+          maxPrize: "Max prize amount",
+          month: "Amount awarded",
+          day: "Category",
+        }
+      : paramLang == "no"
+      ? {
+          startDate: "Gå tilbake",
+          endDate: "År",
+          maxPrize: "Maks premiebeløp",
+          month: "Tildelt beløp",
+          day: "Kategori",
+        }
+      : {
+          startDate: "Gå tillbaka",
+          endDate: "År",
+          maxPrize: "Max prissumma",
+          month: "Tilldelat belopp",
+          day: "Kategori",
+        };
 
   const handleAmountChange = (event: Event, newValue: number | number[]) => {
     setFilterAmount(Math.round((newValue as number) * filterAmountBias));
@@ -54,7 +80,6 @@ export default function FiltersBar({ propYear }: Props) {
 
   return (
     <div style={{ width: "20%", padding: "20px" }}>
-      <p>Exclude categories:</p>
       {filterCategories.map((category) => (
         <FormControlLabel
           control={
@@ -70,7 +95,7 @@ export default function FiltersBar({ propYear }: Props) {
         />
       ))}
       <DateInputer year={propYear} />
-      <p>Max prize amount: {filterAmount}</p>
+      <p>{dictionary.maxPrize}: {filterAmount}</p>
       <Slider
         getAriaLabel={() => "Prize amount range"}
         value={filterAmount / filterAmountBias}

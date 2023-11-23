@@ -1,17 +1,25 @@
-import { FormControl, InputLabel, NativeSelect } from '@mui/material';
-import React from 'react'
+import { FormControl, InputLabel, NativeSelect } from "@mui/material";
+import { useParams } from "react-router-dom";
 
-interface Props{
-    handleChange: (event: { target: { value: string } }) => void;
-    months: string[];
-    defaultValue: number
+interface Props {
+  handleChange: (event: { target: { value: string } }) => void;
+  months: string[];
+  defaultValue: number;
 }
 
-export default function DateInput({months, handleChange, defaultValue}:Props) {
+export default function DateInput({
+  months,
+  handleChange,
+  defaultValue,
+}: Props) {
+  const { paramLang } = useParams();
+
+  const month =
+    paramLang === "en" ? "Month" : paramLang == "no" ? "Måned" : "Månad";
   return (
     <FormControl fullWidth>
       <InputLabel variant="standard" htmlFor="uncontrolled-native">
-        Month
+        {month}
       </InputLabel>
       <NativeSelect
         defaultValue={defaultValue}

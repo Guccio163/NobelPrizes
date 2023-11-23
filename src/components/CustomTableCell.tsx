@@ -1,10 +1,9 @@
 import Button from '@mui/material/Button';
 import TableCell from '@mui/material/TableCell';
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { SortContext } from '../contexts/SortContextProvider';
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import { Prize } from '../pages/MainPage';
 
 interface Props {
     name: string

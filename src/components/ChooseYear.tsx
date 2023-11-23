@@ -1,9 +1,5 @@
-import React, { SetStateAction, useContext, useState } from "react";
-import { LanguageContext } from "../contexts/LanguageContextProvider";
-import eng_logo from "../assets/english.png";
-import no_logo from "../assets/norway.png";
-import se_logo from "../assets/swedish.png";
-import { Button, colors } from "@mui/material";
+import React, { SetStateAction } from "react";
+import { Button } from "@mui/material";
 
 interface Props {
   year: number;

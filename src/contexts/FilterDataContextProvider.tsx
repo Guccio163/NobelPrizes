@@ -62,6 +62,7 @@ export default function FilterDataContextProvider({
     Math.round(filterAmount / 100) + 1
   );
 
+  // UseEffect added for reevaluating data when page inputet by hand, data like to load before useStates are evaluated
   useEffect(() => {
     const amountTemp = Math.max(
       ...preFilteredData.map((prize: Prize) => prize.prizeAmount)

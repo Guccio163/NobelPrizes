@@ -1,9 +1,4 @@
-import React, {
-  PropsWithChildren,
-  createContext,
-  useEffect,
-  useState,
-} from "react";
+import { PropsWithChildren, createContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Prize } from "../pages/MainPage";
 
@@ -17,18 +12,14 @@ export const DataContext = createContext({
       prizeAmount: 100,
     },
   ],
-  setData: (value: React.SetStateAction<Object>) => console.log(value),
   yearList: [2137],
 });
-
-// export const DataContext2 = createContext();
 
 function uniqueFilter(value: number, index: number, self: number[]) {
   return self.indexOf(value) === index;
 }
 
 export default function DataContextProvider({ children }: PropsWithChildren) {
-  const [lang, setLang] = useState<Object>({});
   const [yearList, setYearList] = useState<number[]>([]);
   const [data, setData] = useState<Prize[]>([]);
 
@@ -37,7 +28,6 @@ export default function DataContextProvider({ children }: PropsWithChildren) {
       new Date(prize.dateAwarded).getFullYear()
     );
     const filteredArray = yearsDistinct.filter(uniqueFilter);
-    // setYearList(filteredArray);
     return filteredArray;
   };
 
@@ -46,20 +36,12 @@ export default function DataContextProvider({ children }: PropsWithChildren) {
       let response = await axios.get(
         "https://api.nobelprize.org/2.1/nobelPrizes"
       );
-      // setData(response.data.nobelPrizes);
       console.log("data requested");
-      // console.log({ data });
       return response.data.nobelPrizes;
     } catch (error) {
       console.error("Błąd podczas pobierania danych", error);
     }
   };
-
-  // console.log("DUPPPAAAA");
-
-  // useEffect(() => {
-  //   getDistinctYears();
-  // }, [data]);
 
   useEffect(() => {
     (async () => {
@@ -71,9 +53,7 @@ export default function DataContextProvider({ children }: PropsWithChildren) {
   }, []);
 
   return (
-    <DataContext.Provider
-      value={{ data: data, setData: setLang, yearList: yearList }}
-    >
+    <DataContext.Provider value={{ data: data, yearList: yearList }}>
       {children}
     </DataContext.Provider>
   );

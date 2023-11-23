@@ -1,8 +1,8 @@
-
 import { useContext, useState } from "react";
 import { FilterDataContext } from "../contexts/FilterDataContextProvider";
 import MonthInput from "./MonthInput";
 import DayInput from "./DayInput";
+import { useParams } from "react-router-dom";
 
 interface Props {
   year: string;
@@ -23,6 +23,25 @@ export default function DateInputer({ year }: Props) {
     "Nov",
     "Dec",
   ];
+
+  const { paramLang } = useParams();
+
+  const dictionary =
+    paramLang === "en"
+      ? {
+          startDate: "From",
+          endDate: "To",
+        }
+      : paramLang == "no"
+      ? {
+          startDate: "Fra",
+          endDate: "Til",
+        }
+      : {
+          startDate: "Från",
+          endDate: "Till",
+        };
+
   const monthLen = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
   monthLen[1] = parseInt(year) % 4 == 0 ? 29 : 28;
 
@@ -84,9 +103,13 @@ export default function DateInputer({ year }: Props) {
 
   return (
     <>
-      <p>Start filter date: {filterDate[0]}</p>
+      <p>{dictionary.startDate}: {filterDate[0]}</p>
       <div style={{ display: "flex", flexDirection: "row" }}>
-        <MonthInput months={months} handleChange={handleMonth1Change} defaultValue={0}/>
+        <MonthInput
+          months={months}
+          handleChange={handleMonth1Change}
+          defaultValue={0}
+        />
         <DayInput
           handleChange={handleDay1Change}
           month={month1}
@@ -95,9 +118,13 @@ export default function DateInputer({ year }: Props) {
           name="day1"
         />
       </div>
-      <p>End filter date: {filterDate[1]}</p>
+      <p>{dictionary.endDate}: {filterDate[1]}</p>
       <div style={{ display: "flex", flexDirection: "row" }}>
-        <MonthInput months={months} handleChange={handleMonth2Change} defaultValue={12}/>
+        <MonthInput
+          months={months}
+          handleChange={handleMonth2Change}
+          defaultValue={12}
+        />
         <DayInput
           handleChange={handleDay2Change}
           month={month2}

@@ -1,13 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import MainPage from "./pages/MainPage.tsx";
 import PrizePage from "./pages/PrizePage.tsx";
 import LanguageContextProvider from "./contexts/LanguageContextProvider.tsx";
 import DataContextProvider from "./contexts/DataContextProvider.tsx";
-import SortContextProvider from "./contexts/SortContextProvider.tsx";
 
 const router = createBrowserRouter([
   {
@@ -16,8 +14,6 @@ const router = createBrowserRouter([
   },
   {
     path: "/nagrody/:paramLang/:paramYear",
-        
-
     element: <PrizePage />
 ,
   },
